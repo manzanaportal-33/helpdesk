@@ -6,7 +6,7 @@ export function groupBy<K extends keyof Ticket>(
 ): Record<string, number> {
   const out: Record<string, number> = {};
   for (const t of tickets) {
-    const v = String((t as Record<string, unknown>)[key] ?? "").trim();
+    const v = String(t[key] ?? "").trim();
     const label = v || "(sin valor)";
     out[label] = (out[label] ?? 0) + 1;
   }
