@@ -25,7 +25,7 @@ export function sortByCount(
 export function byMonth(tickets: Ticket[], dateKey: "Creación" | "Modificación") {
   const byMonth: Record<string, number> = {};
   for (const t of tickets) {
-    const raw = (t as Record<string, string>)[dateKey] ?? "";
+    const raw = t[dateKey] ?? "";
     if (!raw) continue;
     const d = new Date(raw);
     if (Number.isNaN(d.getTime())) continue;
