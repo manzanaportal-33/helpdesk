@@ -66,14 +66,6 @@ export default function AnalisisPage() {
   const [slaTargetHoras, setSlaTargetHoras] = useState(24);
   const [selectedSegment, setSelectedSegment] = useState<{ type: string; value: string } | null>(null);
 
-  const ticketsToShow = useMemo(() => {
-    if (!selectedSegment) return ticketsOrdenados;
-    return ticketsOrdenados.filter((t) => {
-      const v = String((t as unknown as Record<string, unknown>)[selectedSegment.type] ?? "").trim();
-      return v === selectedSegment.value;
-    });
-  }, [ticketsOrdenados, selectedSegment]);
-
   const onFile = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -174,6 +166,14 @@ export default function AnalisisPage() {
       return db - da;
     });
   }, [filteredTickets]);
+
+  const ticketsToShow = useMemo(() => {
+    if (!selectedSegment) return ticketsOrdenados;
+    return ticketsOrdenados.filter((t) => {
+      const v = String((t as unknown as Record<string, unknown>)[selectedSegment.type] ?? "").trim();
+      return v === selectedSegment.value;
+    });
+  }, [ticketsOrdenados, selectedSegment]);
 
   const cerrados = useMemo(() => ticketsCerrados(filteredTickets), [filteredTickets]);
   const abiertos = useMemo(() => ticketsAbiertos(filteredTickets), [filteredTickets]);
@@ -588,7 +588,7 @@ export default function AnalisisPage() {
                         fill="#3b82f6"
                         name="Tickets"
                         radius={[0, 4, 4, 0]}
-                        onClick={(data: { name: string }) => setSelectedSegment({ type: "Cliente", value: data.name })}
+                        onClick={(data: { name?: string }) => data?.name && setSelectedSegment({ type: "Cliente", value: data.name })}
                         style={{ cursor: "pointer" }}
                       />
                     </BarChart>
@@ -609,7 +609,7 @@ export default function AnalisisPage() {
                         cy="50%"
                         outerRadius={80}
                         label={({ name, value }) => `${name}: ${value}`}
-                        onClick={(data: { name: string }) => setSelectedSegment({ type: "Prioridad", value: data.name })}
+                        onClick={(data: { name?: string }) => data?.name && setSelectedSegment({ type: "Prioridad", value: data.name })}
                       >
                         {byPrioridad.map((_, i) => (
                           <Cell key={i} fill={COLORS[i % COLORS.length]} />
@@ -636,7 +636,7 @@ export default function AnalisisPage() {
                         fill="#8b5cf6"
                         name="Tickets"
                         radius={[4, 4, 0, 0]}
-                        onClick={(data: { name: string }) => setSelectedSegment({ type: "Estado", value: data.name })}
+                        onClick={(data: { name?: string }) => data?.name && setSelectedSegment({ type: "Estado", value: data.name })}
                         style={{ cursor: "pointer" }}
                       />
                     </BarChart>
@@ -658,7 +658,7 @@ export default function AnalisisPage() {
                         fill="#10b981"
                         name="Tickets"
                         radius={[4, 4, 0, 0]}
-                        onClick={(data: { name: string }) => setSelectedSegment({ type: "Tipo", value: data.name })}
+                        onClick={(data: { name?: string }) => data?.name && setSelectedSegment({ type: "Tipo", value: data.name })}
                         style={{ cursor: "pointer" }}
                       />
                     </BarChart>
@@ -683,7 +683,7 @@ export default function AnalisisPage() {
                         fill="#6366f1"
                         name="Tickets"
                         radius={[0, 4, 4, 0]}
-                        onClick={(data: { name: string }) => setSelectedSegment({ type: "Asignado", value: data.name })}
+                        onClick={(data: { name?: string }) => data?.name && setSelectedSegment({ type: "Asignado", value: data.name })}
                         style={{ cursor: "pointer" }}
                       />
                     </BarChart>
