@@ -69,7 +69,7 @@ export default function AnalisisPage() {
   const ticketsToShow = useMemo(() => {
     if (!selectedSegment) return ticketsOrdenados;
     return ticketsOrdenados.filter((t) => {
-      const v = String((t as Record<string, unknown>)[selectedSegment.type] ?? "").trim();
+      const v = String((t as unknown as Record<string, unknown>)[selectedSegment.type] ?? "").trim();
       return v === selectedSegment.value;
     });
   }, [ticketsOrdenados, selectedSegment]);
