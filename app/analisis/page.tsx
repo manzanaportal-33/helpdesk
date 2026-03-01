@@ -64,6 +64,15 @@ export default function AnalisisPage() {
   const [estado, setEstado] = useState<string>("");
   const [asignado, setAsignado] = useState<string>("");
   const [slaTargetHoras, setSlaTargetHoras] = useState(24);
+  const [selectedSegment, setSelectedSegment] = useState<{ type: string; value: string } | null>(null);
+
+  const ticketsToShow = useMemo(() => {
+    if (!selectedSegment) return ticketsOrdenados;
+    return ticketsOrdenados.filter((t) => {
+      const v = String((t as Record<string, unknown>)[selectedSegment.type] ?? "").trim();
+      return v === selectedSegment.value;
+    });
+  }, [ticketsOrdenados, selectedSegment]);
 
   const onFile = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -172,15 +181,29 @@ export default function AnalisisPage() {
   const slaPct = useMemo(() => cumplimientoSlaPct(filteredTickets, slaTargetHoras), [filteredTickets, slaTargetHoras]);
   const tiempoVidaAbiertos = useMemo(() => tiempoVidaPromedioAbiertos(filteredTickets), [filteredTickets]);
   const abiertosPorCliente = useMemo(() => casosAbiertosPorCliente(filteredTickets), [filteredTickets]);
+  const porAsignado = useMemo(
+    () => sortByCount(groupBy(filteredTickets, "Asignado")).slice(0, 10),
+    [filteredTickets]
+  );
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 p-6">
       <div className="max-w-6xl mx-auto space-y-8">
         <header>
-          <h1 className="text-2xl font-bold">Análisis de tickets · Mesa de Ayuda</h1>
-          <p className="text-zinc-600 dark:text-zinc-400 mt-1">
-            Subí el Excel de la bandeja de equipo para ver métricas por cliente, severidad y más.
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold">Análisis de tickets · Mesa de Ayuda</h1>
+              <p className="text-zinc-600 dark:text-zinc-400 mt-1">
+                Subí el Excel de la bandeja de equipo para ver métricas por cliente, severidad y más.
+              </p>
+            </div>
+            <a
+              href="/"
+              className="text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"
+            >
+              ← Inicio
+            </a>
+          </div>
         </header>
 
         <div
@@ -337,12 +360,41 @@ export default function AnalisisPage() {
                   </select>
                 </div>
               </div>
-              {(desde || hasta || cliente || autor || prioridad || estado || asignado) && (
+              {(desde || hasta || cliente || autor || prioridad || estado || asignado || selectedSegment) && (
                 <p className="mt-3 text-sm text-zinc-500 dark:text-zinc-400">
                   Mostrando {filteredTickets.length} de {tickets.length} tickets
+                  {selectedSegment && (
+                    <span className="ml-2">
+                      · Clic en gráfico: {selectedSegment.type} = {selectedSegment.value}
+                      <button
+                        type="button"
+                        onClick={() => setSelectedSegment(null)}
+                        className="ml-2 text-blue-600 hover:underline"
+                      >
+                        Limpiar
+                      </button>
+                    </span>
+                  )}
                 </p>
               )}
             </div>
+
+            {ticketsToShow.length > 0 && (
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const ws = XLSX.utils.json_to_sheet(ticketsToShow);
+                    const wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, "Tickets");
+                    XLSX.writeFile(wb, `tickets-filtrados-${new Date().toISOString().slice(0, 10)}.xlsx`);
+                  }}
+                  className="rounded-lg border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 px-3 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700"
+                >
+                  Descargar Excel
+                </button>
+              </div>
+            )}
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               <div className="bg-white dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-700 p-4">
@@ -486,7 +538,7 @@ export default function AnalisisPage() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-zinc-200 dark:divide-zinc-700">
-                      {ticketsOrdenados.map((t) => (
+                      {ticketsToShow.map((t) => (
                         <tr key={t.ID} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
                           <td className="py-2 px-3 font-mono text-zinc-600 dark:text-zinc-400">{t.ID}</td>
                           <td className="py-2 px-3 whitespace-nowrap">{t.Cliente || "—"}</td>
@@ -531,7 +583,14 @@ export default function AnalisisPage() {
                       <XAxis type="number" />
                       <YAxis type="category" dataKey="name" width={100} tick={{ fontSize: 11 }} />
                       <Tooltip />
-                      <Bar dataKey="value" fill="#3b82f6" name="Tickets" radius={[0, 4, 4, 0]} />
+                      <Bar
+                        dataKey="value"
+                        fill="#3b82f6"
+                        name="Tickets"
+                        radius={[0, 4, 4, 0]}
+                        onClick={(data: { name: string }) => setSelectedSegment({ type: "Cliente", value: data.name })}
+                        style={{ cursor: "pointer" }}
+                      />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -550,6 +609,7 @@ export default function AnalisisPage() {
                         cy="50%"
                         outerRadius={80}
                         label={({ name, value }) => `${name}: ${value}`}
+                        onClick={(data: { name: string }) => setSelectedSegment({ type: "Prioridad", value: data.name })}
                       >
                         {byPrioridad.map((_, i) => (
                           <Cell key={i} fill={COLORS[i % COLORS.length]} />
@@ -571,7 +631,14 @@ export default function AnalisisPage() {
                       <XAxis dataKey="name" angle={-35} textAnchor="end" height={60} tick={{ fontSize: 11 }} />
                       <YAxis />
                       <Tooltip />
-                      <Bar dataKey="value" fill="#8b5cf6" name="Tickets" radius={[4, 4, 0, 0]} />
+                      <Bar
+                        dataKey="value"
+                        fill="#8b5cf6"
+                        name="Tickets"
+                        radius={[4, 4, 0, 0]}
+                        onClick={(data: { name: string }) => setSelectedSegment({ type: "Estado", value: data.name })}
+                        style={{ cursor: "pointer" }}
+                      />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -586,12 +653,44 @@ export default function AnalisisPage() {
                       <XAxis dataKey="name" angle={-35} textAnchor="end" height={60} tick={{ fontSize: 11 }} />
                       <YAxis />
                       <Tooltip />
-                      <Bar dataKey="value" fill="#10b981" name="Tickets" radius={[4, 4, 0, 0]} />
+                      <Bar
+                        dataKey="value"
+                        fill="#10b981"
+                        name="Tickets"
+                        radius={[4, 4, 0, 0]}
+                        onClick={(data: { name: string }) => setSelectedSegment({ type: "Tipo", value: data.name })}
+                        style={{ cursor: "pointer" }}
+                      />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
               </div>
             </div>
+
+            {/* Por asignado */}
+            {porAsignado.length > 0 && (
+              <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 p-4">
+                <h2 className="font-semibold mb-4">Por asignado</h2>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={porAsignado} layout="vertical" margin={{ left: 20, right: 20 }}>
+                      <CartesianGrid strokeDasharray="3 3" className="stroke-zinc-200 dark:stroke-zinc-700" />
+                      <XAxis type="number" />
+                      <YAxis type="category" dataKey="name" width={140} tick={{ fontSize: 11 }} />
+                      <Tooltip />
+                      <Bar
+                        dataKey="value"
+                        fill="#6366f1"
+                        name="Tickets"
+                        radius={[0, 4, 4, 0]}
+                        onClick={(data: { name: string }) => setSelectedSegment({ type: "Asignado", value: data.name })}
+                        style={{ cursor: "pointer" }}
+                      />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            )}
 
             {byMonthCreacion.length > 0 && (
               <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 p-4">
