@@ -245,7 +245,7 @@ export default function AnalisisPage() {
     <div className="min-h-screen bg-gradient-to-b from-zinc-50 via-sky-50/40 to-zinc-100 dark:from-zinc-950 dark:via-sky-950/20 dark:to-zinc-950 text-zinc-900 dark:text-zinc-100 p-6">
       <div className="max-w-6xl mx-auto space-y-8">
         <header>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col items-center gap-2 text-center">
             <div className="space-y-2">
               <div className="inline-flex items-center gap-2 rounded-full bg-white/70 dark:bg-zinc-900/70 px-3 py-1 border border-zinc-200/60 dark:border-zinc-700/60 shadow-sm">
                 <span className="h-2 w-2 rounded-full" style={{ backgroundColor: "#05397f" }} />
@@ -253,8 +253,8 @@ export default function AnalisisPage() {
                   Dashboard de tickets
                 </span>
               </div>
-              <h1 className="text-2xl font-bold tracking-tight" style={{ color: "#05397f" }}>
-                Análisis de tickets · Mesa de Ayuda
+              <h1 className="text-2xl font-bold tracking-tight text-center" style={{ color: "#05397f" }}>
+                Análisis de Tickets · Mesa de Ayuda
               </h1>
             </div>
             <a
