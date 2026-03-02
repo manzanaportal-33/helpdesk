@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import * as XLSX from "xlsx";
 import { rowsToTickets } from "@/lib/parseExcel";
+import { supabase, ticketToRow, rowToTicket } from "@/lib/supabase";
 import { groupBy, sortByCount, byMonth, ticketsCerrados, ticketsAbiertos, ttrPromedioHoras, cumplimientoSlaPct, tiempoVidaPromedioAbiertos, casosAbiertosPorCliente } from "@/lib/analytics";
 import type { Ticket } from "@/lib/types";
 import {
@@ -66,6 +67,26 @@ export default function AnalisisPage() {
   const [slaTargetHoras, setSlaTargetHoras] = useState(24);
   const [selectedSegment, setSelectedSegment] = useState<{ type: string; value: string } | null>(null);
 
+  useEffect(() => {
+    if (!supabase) return;
+    supabase
+      .from("tickets")
+      .select("*")
+      .order("creacion", { ascending: false })
+      .then(({ data, error: err }) => {
+        if (err || !data?.length) return;
+        const list = data.map(rowToTicket);
+        setTickets(list);
+        const dates = list.map((t) => parseDate(t.Creación)).filter(Boolean) as Date[];
+        if (dates.length > 0) {
+          const min = new Date(Math.min(...dates.map((d) => d.getTime())));
+          const max = new Date(Math.max(...dates.map((d) => d.getTime())));
+          setDesde(toInputDate(min));
+          setHasta(toInputDate(max));
+        }
+      });
+  }, []);
+
   const onFile = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -95,6 +116,12 @@ export default function AnalisisPage() {
         } else {
           setDesde("");
           setHasta("");
+        }
+        if (supabase && list.length > 0) {
+          const rows = list.map(ticketToRow);
+          supabase.from("tickets").upsert(rows, { onConflict: "ticket_id" }).then(({ error: err }) => {
+            if (err) console.error("Error al guardar en Supabase:", err);
+          });
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : "Error al leer el Excel");
