@@ -1,5 +1,8 @@
 # Supabase – Mesa de Ayuda
 
+**No subas `.env.local` a GitHub** (contiene la clave de Supabase). Si ya lo hiciste, quitarlo del repo:  
+`git rm --cached .env.local` y hacer commit. En Vercel, configurá las variables en **Settings → Environment Variables**.
+
 ## Crear la tabla en Supabase
 
 1. Entrá a tu proyecto en [Supabase](https://supabase.com/dashboard).

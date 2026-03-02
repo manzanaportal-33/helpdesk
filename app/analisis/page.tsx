@@ -66,15 +66,26 @@ export default function AnalisisPage() {
   const [asignado, setAsignado] = useState<string>("");
   const [slaTargetHoras, setSlaTargetHoras] = useState(24);
   const [selectedSegment, setSelectedSegment] = useState<{ type: string; value: string } | null>(null);
+  const [supabaseLoadError, setSupabaseLoadError] = useState<string | null>(null);
+  const [supabaseLoaded, setSupabaseLoaded] = useState(false);
 
   useEffect(() => {
-    if (!supabase) return;
+    if (!supabase) {
+      setSupabaseLoaded(true);
+      return;
+    }
+    setSupabaseLoadError(null);
     supabase
       .from("tickets")
       .select("*")
       .order("creacion", { ascending: false })
       .then(({ data, error: err }) => {
-        if (err || !data?.length) return;
+        setSupabaseLoaded(true);
+        if (err) {
+          setSupabaseLoadError(err.message);
+          return;
+        }
+        if (!data?.length) return;
         const list = data.map(rowToTicket);
         setTickets(list);
         const dates = list.map((t) => parseDate(t.Creación)).filter(Boolean) as Date[];
@@ -232,6 +243,22 @@ export default function AnalisisPage() {
             </a>
           </div>
         </header>
+
+        {!supabase && supabaseLoaded && (
+          <div className="rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 p-4 text-amber-800 dark:text-amber-200 text-sm">
+            <strong>Supabase no configurado.</strong> Para que la tabla se cargue sola desde la base de datos, configurá en Vercel (o en <code className="bg-amber-100 dark:bg-amber-900/50 px-1 rounded">.env.local</code> en desarrollo): <code className="bg-amber-100 dark:bg-amber-900/50 px-1 rounded">NEXT_PUBLIC_SUPABASE_URL</code> y <code className="bg-amber-100 dark:bg-amber-900/50 px-1 rounded">NEXT_PUBLIC_SUPABASE_ANON_KEY</code>. Mientras tanto, subí un Excel para ver los datos.
+          </div>
+        )}
+        {supabaseLoadError && (
+          <div className="rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/30 p-4 text-red-800 dark:text-red-200 text-sm">
+            <strong>Error al cargar desde Supabase:</strong> {supabaseLoadError}. Revisá que la tabla <code className="bg-red-100 dark:bg-red-900/50 px-1 rounded">tickets</code> exista y que RLS permita lectura. Podés subir un Excel igual.
+          </div>
+        )}
+        {supabase && supabaseLoaded && tickets.length === 0 && (
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            Sin datos en la base. Subí un Excel para cargar la tabla; después se verá acá sin volver a subir.
+          </p>
+        )}
 
         <div
           className="border-2 border-dashed border-zinc-300 dark:border-zinc-600 rounded-xl p-8 text-center bg-white dark:bg-zinc-900"
