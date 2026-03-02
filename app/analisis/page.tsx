@@ -241,7 +241,7 @@ export default function AnalisisPage() {
     [filteredTickets]
   );
   const ticketsPorUsuarioMes = useMemo(() => {
-    type UsuarioMesRow = { month: string } & Record<string, number>;
+    type UsuarioMesRow = { month: string } & Record<string, number | string>;
 
     const totalPorUsuario: Record<string, number> = {};
     for (const t of filteredTickets) {
@@ -267,7 +267,8 @@ export default function AnalisisPage() {
         rowsMap.set(month, { month });
       }
       const row = rowsMap.get(month)!;
-      row[usuario] = (row[usuario] ?? 0) + 1;
+      const current = typeof row[usuario] === "number" ? (row[usuario] as number) : 0;
+      row[usuario] = current + 1;
     }
 
     const data = Array.from(rowsMap.values()).sort((a, b) => a.month.localeCompare(b.month));
@@ -282,7 +283,7 @@ export default function AnalisisPage() {
     return { data, seriesKeys: Array.from(seriesKeysSet) };
   }, [filteredTickets]);
   const ticketsPorAutorMes = useMemo(() => {
-    type AutorMesRow = { month: string } & Record<string, number>;
+    type AutorMesRow = { month: string } & Record<string, number | string>;
 
     const totalPorAutor: Record<string, number> = {};
     for (const t of filteredTickets) {
@@ -308,7 +309,8 @@ export default function AnalisisPage() {
         rowsMap.set(month, { month });
       }
       const row = rowsMap.get(month)!;
-      row[autor] = (row[autor] ?? 0) + 1;
+      const current = typeof row[autor] === "number" ? (row[autor] as number) : 0;
+      row[autor] = current + 1;
     }
 
     const data = Array.from(rowsMap.values()).sort((a, b) => a.month.localeCompare(b.month));
