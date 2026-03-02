@@ -247,10 +247,15 @@ export default function AnalisisPage() {
         <header>
           <div className="flex flex-col items-center gap-2 text-center">
             <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 rounded-full bg-white/70 dark:bg-zinc-900/70 px-3 py-1 border border-zinc-200/60 dark:border-zinc-700/60 shadow-sm">
-                <span className="h-2 w-2 rounded-full" style={{ backgroundColor: "#05397f" }} />
-                <span className="text-xs font-medium text-zinc-600 dark:text-zinc-300">
-                  Dashboard de tickets
+              <div className="inline-flex items-center justify-center gap-2">
+                <div
+                  className="flex h-7 w-7 items-center justify-center rounded-md shadow-sm"
+                  style={{ backgroundColor: "#05397f" }}
+                >
+                  <span className="text-white text-sm font-semibold leading-none">//</span>
+                </div>
+                <span className="text-sm font-medium text-zinc-700 dark:text-zinc-200">
+                  Helpdesk
                 </span>
               </div>
               <h1 className="text-2xl font-bold tracking-tight text-center" style={{ color: "#05397f" }}>
