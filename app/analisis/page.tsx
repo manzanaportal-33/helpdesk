@@ -240,6 +240,88 @@ export default function AnalisisPage() {
     () => sortByCount(groupBy(filteredTickets, "Asignado")).slice(0, 10),
     [filteredTickets]
   );
+  const ticketsPorUsuarioMes = useMemo(() => {
+    type UsuarioMesRow = { month: string } & Record<string, number>;
+
+    const totalPorUsuario: Record<string, number> = {};
+    for (const t of filteredTickets) {
+      if (!t.Asignado) continue;
+      totalPorUsuario[t.Asignado] = (totalPorUsuario[t.Asignado] ?? 0) + 1;
+    }
+
+    const topUsuarios = Object.entries(totalPorUsuario)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([name]) => name);
+
+    const rowsMap = new Map<string, UsuarioMesRow>();
+
+    for (const t of filteredTickets) {
+      if (!t.Asignado) continue;
+      const d = parseDate(t.Creación);
+      if (!d) continue;
+      const month = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+      const usuario = topUsuarios.includes(t.Asignado) ? t.Asignado : "Otros";
+
+      if (!rowsMap.has(month)) {
+        rowsMap.set(month, { month });
+      }
+      const row = rowsMap.get(month)!;
+      row[usuario] = (row[usuario] ?? 0) + 1;
+    }
+
+    const data = Array.from(rowsMap.values()).sort((a, b) => a.month.localeCompare(b.month));
+
+    const seriesKeysSet = new Set<string>();
+    for (const row of data) {
+      Object.keys(row).forEach((k) => {
+        if (k !== "month") seriesKeysSet.add(k);
+      });
+    }
+
+    return { data, seriesKeys: Array.from(seriesKeysSet) };
+  }, [filteredTickets]);
+  const ticketsPorAutorMes = useMemo(() => {
+    type AutorMesRow = { month: string } & Record<string, number>;
+
+    const totalPorAutor: Record<string, number> = {};
+    for (const t of filteredTickets) {
+      if (!t.Autor) continue;
+      totalPorAutor[t.Autor] = (totalPorAutor[t.Autor] ?? 0) + 1;
+    }
+
+    const topAutores = Object.entries(totalPorAutor)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([name]) => name);
+
+    const rowsMap = new Map<string, AutorMesRow>();
+
+    for (const t of filteredTickets) {
+      if (!t.Autor) continue;
+      const d = parseDate(t.Creación);
+      if (!d) continue;
+      const month = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+      const autor = topAutores.includes(t.Autor) ? t.Autor : "Otros";
+
+      if (!rowsMap.has(month)) {
+        rowsMap.set(month, { month });
+      }
+      const row = rowsMap.get(month)!;
+      row[autor] = (row[autor] ?? 0) + 1;
+    }
+
+    const data = Array.from(rowsMap.values()).sort((a, b) => a.month.localeCompare(b.month));
+
+    const seriesKeysSet = new Set<string>();
+    for (const row of data) {
+      Object.keys(row).forEach((k) => {
+        if (k !== "month") seriesKeysSet.add(k);
+      });
+    }
+
+    return { data, seriesKeys: Array.from(seriesKeysSet) };
+  }, [filteredTickets]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-zinc-50 via-sky-50/40 to-zinc-100 dark:from-zinc-950 dark:via-sky-950/20 dark:to-zinc-950 text-zinc-900 dark:text-zinc-100 p-6">
@@ -806,6 +888,56 @@ export default function AnalisisPage() {
                         dot={{ r: 3 }}
                       />
                     </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            )}
+            {ticketsPorUsuarioMes.data.length > 0 && (
+              <div className="bg-[#f8f9fa] dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm p-4">
+                <h2 className="font-semibold mb-4" style={{ color: "#05397f" }}>Tickets por usuario por mes (Asignado)</h2>
+                <div className="h-80">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={ticketsPorUsuarioMes.data} margin={{ bottom: 40 }}>
+                      <CartesianGrid strokeDasharray="3 3" className="stroke-zinc-200 dark:stroke-zinc-700" />
+                      <XAxis dataKey="month" tick={{ fontSize: 11 }} />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+                      {ticketsPorUsuarioMes.seriesKeys.map((key, index) => (
+                        <Bar
+                          key={key}
+                          dataKey={key}
+                          stackId="usuarios"
+                          name={key}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            )}
+            {ticketsPorAutorMes.data.length > 0 && (
+              <div className="bg-[#f8f9fa] dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm p-4">
+                <h2 className="font-semibold mb-4" style={{ color: "#05397f" }}>Tickets por autor por mes (Creación)</h2>
+                <div className="h-80">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={ticketsPorAutorMes.data} margin={{ bottom: 40 }}>
+                      <CartesianGrid strokeDasharray="3 3" className="stroke-zinc-200 dark:stroke-zinc-700" />
+                      <XAxis dataKey="month" tick={{ fontSize: 11 }} />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+                      {ticketsPorAutorMes.seriesKeys.map((key, index) => (
+                        <Bar
+                          key={key}
+                          dataKey={key}
+                          stackId="autores"
+                          name={key}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                    </BarChart>
                   </ResponsiveContainer>
                 </div>
               </div>
