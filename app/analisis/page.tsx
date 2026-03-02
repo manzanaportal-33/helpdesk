@@ -69,6 +69,11 @@ export default function AnalisisPage() {
   const [supabaseLoadError, setSupabaseLoadError] = useState<string | null>(null);
   const [supabaseLoaded, setSupabaseLoaded] = useState(false);
 
+  const handleImportClick = () => {
+    const input = document.getElementById("excel-input") as HTMLInputElement | null;
+    input?.click();
+  };
+
   useEffect(() => {
     if (!supabase) {
       setSupabaseLoaded(true);
@@ -196,6 +201,18 @@ export default function AnalisisPage() {
   const byEstado = sortByCount(groupBy(filteredTickets, "Estado"));
   const byTipo = sortByCount(groupBy(filteredTickets, "Tipo"));
   const byMonthCreacion = byMonth(filteredTickets, "Creación");
+  const byDayCreacion = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const t of filteredTickets) {
+      const d = parseDate(t.Creación);
+      if (!d) continue;
+      const key = d.toISOString().slice(0, 10); // yyyy-mm-dd
+      counts[key] = (counts[key] ?? 0) + 1;
+    }
+    return Object.entries(counts)
+      .map(([name, value]) => ({ name, value }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [filteredTickets]);
 
   const ticketsOrdenados = useMemo(() => {
     return [...filteredTickets].sort((a, b) => {
@@ -260,39 +277,35 @@ export default function AnalisisPage() {
           </p>
         )}
 
-        <div
-          className="border-2 border-dashed border-zinc-300 dark:border-zinc-600 rounded-xl p-8 text-center bg-white dark:bg-zinc-900"
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={(e) => {
-            e.preventDefault();
-            const f = e.dataTransfer.files[0];
-            if (f && (f.name.endsWith(".xlsx") || f.name.endsWith(".xls"))) {
-              const input = document.getElementById("excel-input") as HTMLInputElement;
-              if (input) {
-                const dt = new DataTransfer();
-                dt.items.add(f);
-                input.files = dt.files;
-                input.dispatchEvent(new Event("change", { bubbles: true }));
-              }
-            }
-          }}
-        >
-          <input
-            id="excel-input"
-            type="file"
-            accept=".xlsx,.xls"
-            onChange={onFile}
-            className="sr-only"
-          />
-          <label htmlFor="excel-input" className="cursor-pointer">
-            <span className="text-zinc-600 dark:text-zinc-400 block mb-2">
-              {loading ? "Leyendo..." : "Arrastrá el Excel acá o hacé clic para elegir"}
-            </span>
-            <span className="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-              Seleccionar archivo
-            </span>
-          </label>
-          {error && <p className="mt-3 text-red-600 dark:text-red-400">{error}</p>}
+        <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 p-4 flex flex-wrap items-center justify-between gap-4">
+          <div className="text-sm text-zinc-600 dark:text-zinc-400">
+            <p className="font-medium text-zinc-900 dark:text-zinc-100">Datos de tickets</p>
+            <p>Cargá un Excel cuando quieras actualizar la base de datos.</p>
+            {loading && <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">Leyendo archivo...</p>}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <input
+              id="excel-input"
+              type="file"
+              accept=".xlsx,.xls"
+              onChange={onFile}
+              className="hidden"
+            />
+            <button
+              type="button"
+              onClick={handleImportClick}
+              className="rounded-lg border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 px-3 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700"
+            >
+              Importar Excel
+            </button>
+          </div>
+
+          {error && (
+            <p className="w-full mt-2 text-sm text-red-600 dark:text-red-400 text-right">
+              {error}
+            </p>
+          )}
         </div>
 
         {tickets.length > 0 && (
@@ -757,6 +770,29 @@ export default function AnalisisPage() {
                       <YAxis />
                       <Tooltip />
                       <Line type="monotone" dataKey="value" stroke="#f59e0b" name="Tickets" strokeWidth={2} dot={{ r: 4 }} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            )}
+            {byDayCreacion.length > 0 && (
+              <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 p-4">
+                <h2 className="font-semibold mb-4">Tickets por día (fecha de creación)</h2>
+                <div className="h-72">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={byDayCreacion}>
+                      <CartesianGrid strokeDasharray="3 3" className="stroke-zinc-200 dark:stroke-zinc-700" />
+                      <XAxis dataKey="name" tick={{ fontSize: 11 }} />
+                      <YAxis />
+                      <Tooltip />
+                      <Line
+                        type="monotone"
+                        dataKey="value"
+                        stroke="#22c55e"
+                        name="Tickets"
+                        strokeWidth={2}
+                        dot={{ r: 3 }}
+                      />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
