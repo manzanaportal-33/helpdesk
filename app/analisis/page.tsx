@@ -256,9 +256,6 @@ export default function AnalisisPage() {
               <h1 className="text-2xl font-bold tracking-tight" style={{ color: "#05397f" }}>
                 Análisis de tickets · Mesa de Ayuda
               </h1>
-              <p className="text-zinc-600 dark:text-zinc-400">
-                Subí el Excel de la bandeja de equipo para ver métricas por cliente, severidad y más.
-              </p>
             </div>
             <a
               href="/"
@@ -285,7 +282,7 @@ export default function AnalisisPage() {
           </p>
         )}
 
-        <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm p-4 flex flex-wrap items-center justify-between gap-4">
+        <div className="bg-[#f8f9fa] dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm p-4 flex flex-wrap items-center justify-between gap-4">
           <div className="text-sm text-zinc-600 dark:text-zinc-400">
             <p className="font-medium text-zinc-900 dark:text-zinc-100">Datos de tickets</p>
             <p>Cargá un Excel cuando quieras actualizar la base de datos.</p>
@@ -320,7 +317,7 @@ export default function AnalisisPage() {
         {tickets.length > 0 && (
           <>
             {/* Barra de filtros */}
-            <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm p-4">
+            <div className="bg-[#f8f9fa] dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm p-4">
               <div className="flex flex-wrap items-end gap-4">
                 <div>
                   <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Desde</label>
@@ -474,21 +471,21 @@ export default function AnalisisPage() {
             )}
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="bg-white dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-700 p-4">
+              <div className="bg-[#f8f9fa] dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-700 p-4">
                 <p className="text-sm text-zinc-500 dark:text-zinc-400">Total tickets</p>
                 <p className="text-2xl font-bold">{filteredTickets.length}</p>
               </div>
-              <div className="bg-white dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-700 p-4">
+              <div className="bg-[#f8f9fa] dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-700 p-4">
                 <p className="text-sm text-zinc-500 dark:text-zinc-400">Clientes</p>
                 <p className="text-2xl font-bold">{new Set(filteredTickets.map((t) => t.Cliente)).size}</p>
               </div>
-              <div className="bg-white dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-700 p-4">
+              <div className="bg-[#f8f9fa] dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-700 p-4">
                 <p className="text-sm text-zinc-500 dark:text-zinc-400">Urgentes</p>
                 <p className="text-2xl font-bold">
                   {filteredTickets.filter((t) => t.Prioridad === "Urgente").length}
                 </p>
               </div>
-              <div className="bg-white dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-700 p-4">
+              <div className="bg-[#f8f9fa] dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-700 p-4">
                 <p className="text-sm text-zinc-500 dark:text-zinc-400">Abiertos (no resueltos)</p>
                 <p className="text-2xl font-bold">
                   {
@@ -504,7 +501,7 @@ export default function AnalisisPage() {
             </div>
 
             {/* Métricas SLA y desempeño */}
-            <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm p-4">
+            <div className="bg-[#f8f9fa] dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm p-4">
               <h2 className="font-semibold text-lg mb-4" style={{ color: "#05397f" }}>Métricas SLA y desempeño</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4">
                 <div className="rounded-lg border border-zinc-200 dark:border-zinc-700 p-3">
@@ -589,7 +586,7 @@ export default function AnalisisPage() {
             </div>
 
             {/* Listado de tickets filtrados */}
-            <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm overflow-hidden">
+            <div className="bg-[#f8f9fa] dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm overflow-hidden">
               <div className="px-4 py-3 border-b border-zinc-200 dark:border-zinc-700">
                 <h2 className="font-semibold text-lg" style={{ color: "#05397f" }}>Tickets del reporte</h2>
                 <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">
@@ -651,7 +648,7 @@ export default function AnalisisPage() {
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm p-4">
+              <div className="bg-[#f8f9fa] dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm p-4">
                 <h2 className="font-semibold mb-4" style={{ color: "#05397f" }}>Por cliente (top 12)</h2>
                 <div className="h-80">
                   <ResponsiveContainer width="100%" height="100%">
@@ -673,7 +670,7 @@ export default function AnalisisPage() {
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm p-4">
+              <div className="bg-[#f8f9fa] dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm p-4">
                 <h2 className="font-semibold mb-4" style={{ color: "#05397f" }}>Por prioridad</h2>
                 <div className="h-80">
                   <ResponsiveContainer width="100%" height="100%">
@@ -699,7 +696,7 @@ export default function AnalisisPage() {
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm p-4">
+              <div className="bg-[#f8f9fa] dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm p-4">
                 <h2 className="font-semibold mb-4" style={{ color: "#05397f" }}>Por estado</h2>
                 <div className="h-80">
                   <ResponsiveContainer width="100%" height="100%">
@@ -721,7 +718,7 @@ export default function AnalisisPage() {
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm p-4">
+              <div className="bg-[#f8f9fa] dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm p-4">
                 <h2 className="font-semibold mb-4" style={{ color: "#05397f" }}>Por tipo</h2>
                 <div className="h-80">
                   <ResponsiveContainer width="100%" height="100%">
@@ -746,7 +743,7 @@ export default function AnalisisPage() {
 
             {/* Por asignado */}
             {porAsignado.length > 0 && (
-              <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm p-4">
+              <div className="bg-[#f8f9fa] dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm p-4">
                 <h2 className="font-semibold mb-4" style={{ color: "#05397f" }}>Por asignado</h2>
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
@@ -770,7 +767,7 @@ export default function AnalisisPage() {
             )}
 
             {byMonthCreacion.length > 0 && (
-              <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm p-4">
+              <div className="bg-[#f8f9fa] dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm p-4">
                 <h2 className="font-semibold mb-4" style={{ color: "#05397f" }}>Tickets por mes (fecha de creación)</h2>
                 <div className="h-72">
                   <ResponsiveContainer width="100%" height="100%">
@@ -786,7 +783,7 @@ export default function AnalisisPage() {
               </div>
             )}
             {byDayCreacion.length > 0 && (
-              <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm p-4">
+              <div className="bg-[#f8f9fa] dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm p-4">
                 <h2 className="font-semibold mb-4" style={{ color: "#05397f" }}>Tickets por día (fecha de creación)</h2>
                 <div className="h-72">
                   <ResponsiveContainer width="100%" height="100%">
