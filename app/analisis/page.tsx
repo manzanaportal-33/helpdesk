@@ -325,6 +325,53 @@ export default function AnalisisPage() {
     return { data, seriesKeys: Array.from(seriesKeysSet) };
   }, [filteredTickets]);
 
+  const handleDownloadReport = () => {
+    if (!filteredTickets.length) return;
+
+    const wb = XLSX.utils.book_new();
+
+    const addSheet = (name: string, rows: unknown[]) => {
+      if (!rows || rows.length === 0) return;
+      const ws = XLSX.utils.json_to_sheet(rows as any[]);
+      XLSX.utils.book_append_sheet(wb, ws, name);
+    };
+
+    addSheet("Tickets filtrados", filteredTickets);
+    addSheet("Por cliente", byCliente);
+    addSheet("Por prioridad", byPrioridad);
+    addSheet("Por estado", byEstado);
+    addSheet("Por tipo", byTipo);
+    addSheet("Por asignado", porAsignado);
+    addSheet("Abiertos por cliente", abiertosPorCliente);
+    addSheet("Tickets por mes", byMonthCreacion);
+    addSheet("Tickets por día", byDayCreacion);
+    addSheet("Usuario por mes", ticketsPorUsuarioMes.data);
+    addSheet("Autor por mes", ticketsPorAutorMes.data);
+
+    const slaRows = [
+      {
+        Metrica: "Cumplimiento SLA (%)",
+        Valor: slaPct ?? null,
+        "Objetivo (horas)": slaTargetHoras,
+      },
+      {
+        Metrica: "TTR promedio (horas)",
+        Valor: ttrHoras,
+      },
+      {
+        Metrica: "Tiempo vida casos abiertos (días)",
+        Valor: tiempoVidaAbiertos,
+      },
+      {
+        Metrica: "Casos abiertos",
+        Valor: abiertos.length,
+      },
+    ];
+    addSheet("SLA", slaRows);
+
+    XLSX.writeFile(wb, `informe-tickets-${new Date().toISOString().slice(0, 10)}.xlsx`);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-zinc-50 via-sky-50/40 to-zinc-100 dark:from-zinc-950 dark:via-sky-950/20 dark:to-zinc-950 text-zinc-900 dark:text-zinc-100 p-6">
       <div className="max-w-6xl mx-auto space-y-8">
@@ -555,6 +602,14 @@ export default function AnalisisPage() {
                   style={{ backgroundColor: "#05397f" }}
                 >
                   Descargar Excel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDownloadReport}
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#05397f]"
+                  style={{ backgroundColor: "#05397f" }}
+                >
+                  Descargar Informe
                 </button>
               </div>
             )}
