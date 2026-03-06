@@ -3,14 +3,14 @@ export default function Home() {
     <main className="min-h-screen bg-gradient-to-b from-zinc-50 via-sky-50/40 to-zinc-100 dark:from-zinc-950 dark:via-sky-950/20 dark:to-zinc-950 text-zinc-900 dark:text-zinc-100 flex items-center justify-center p-6">
       <div className="max-w-3xl w-full mx-auto space-y-10">
         <header className="text-center space-y-4">
-          <div className="inline-flex items-center justify-center gap-2">
+          <div className="inline-flex items-center justify-center gap-2 rounded-full bg-white/80 dark:bg-zinc-900/80 px-3 py-1 border border-zinc-200 dark:border-zinc-700 shadow-sm">
             <div
-              className="flex h-9 w-9 items-center justify-center rounded-md shadow-sm"
+              className="flex h-7 w-7 items-center justify-center rounded-md shadow-sm"
               style={{ backgroundColor: "#05397f" }}
             >
-              <span className="text-white text-base font-semibold leading-none">//</span>
+              <span className="text-white text-sm font-semibold leading-none">//</span>
             </div>
-            <span className="text-base font-semibold text-zinc-700 dark:text-zinc-200">
+            <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-200 tracking-wide">
               Helpdesk
             </span>
           </div>
@@ -18,27 +18,27 @@ export default function Home() {
             <h1 className="text-3xl font-bold tracking-tight" style={{ color: "#05397f" }}>
               Gestión de Mesa de Ayuda
             </h1>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400 max-w-xl mx-auto">
-              Panel centralizado para analizar tickets, monitorear SLA y agregar futuras herramientas de
-              gestión para tu mesa de ayuda.
+            <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 max-w-xl mx-auto">
+              Panel Centralizado de la Mesa de Ayuda
             </p>
           </div>
         </header>
 
         <section className="bg-[#f8f9fa] dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-700 shadow-sm p-6 space-y-6">
-          <div className="space-y-1">
+          <div className="flex items-center justify-between gap-2 flex-wrap">
             <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-              Módulos disponibles
+              Módulos de Gestión
             </h2>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              Elegí qué querés gestionar hoy. Podés sumar más módulos a medida que el sistema crezca.
-            </p>
+            <span className="inline-flex items-center gap-1 rounded-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 px-2 py-1 text-[11px] text-zinc-500 dark:text-zinc-400">
+              <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: "#05397f" }} />
+              Ecosistema en crecimiento
+            </span>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <a
               href="/analisis"
-              className="group flex flex-col justify-between rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-950/60 p-4 hover:border-[#05397f] hover:shadow-md transition-colors"
+              className="group flex flex-col justify-between rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white/90 dark:bg-zinc-950/60 p-4 hover:border-[#05397f] hover:shadow-lg hover:-translate-y-0.5 transition-all"
             >
               <div className="space-y-2">
                 <p className="text-xs font-medium uppercase tracking-wide text-[#05397f]">
@@ -46,10 +46,6 @@ export default function Home() {
                 </p>
                 <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
                   Dashboard de Mesa de Ayuda
-                </p>
-                <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                  Cargá un Excel de tickets, filtrá por cliente, prioridad y estado, y obtené métricas de SLA,
-                  tendencias y reportes descargables.
                 </p>
               </div>
               <span className="mt-3 inline-flex items-center text-xs font-medium text-[#05397f] group-hover:underline">
@@ -59,7 +55,7 @@ export default function Home() {
 
             <a
               href="/tablero"
-              className="group flex flex-col justify-between rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-950/60 p-4 hover:border-[#05397f] hover:shadow-md transition-colors"
+              className="group flex flex-col justify-between rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white/90 dark:bg-zinc-950/60 p-4 hover:border-[#05397f] hover:shadow-lg hover:-translate-y-0.5 transition-all"
             >
               <div className="space-y-2">
                 <p className="text-xs font-medium uppercase tracking-wide text-[#05397f]">
@@ -67,10 +63,6 @@ export default function Home() {
                 </p>
                 <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
                   Tablero de incidencias
-                </p>
-                <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                  Vista tipo Kanban por estado: Pendiente, En Curso, Resuelto, etc. Mové los tickets
-                  de columna y actualizá el estado en la base de datos.
                 </p>
               </div>
               <span className="mt-3 inline-flex items-center text-xs font-medium text-[#05397f] group-hover:underline">
@@ -80,7 +72,7 @@ export default function Home() {
 
             <a
               href="/tareas"
-              className="group flex flex-col justify-between rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-950/60 p-4 hover:border-[#05397f] hover:shadow-md transition-colors"
+              className="group flex flex-col justify-between rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white/90 dark:bg-zinc-950/60 p-4 hover:border-[#05397f] hover:shadow-lg hover:-translate-y-0.5 transition-all"
             >
               <div className="space-y-2">
                 <p className="text-xs font-medium uppercase tracking-wide text-[#05397f]">
@@ -88,10 +80,6 @@ export default function Home() {
                 </p>
                 <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
                   Tareas internas de la mesa
-                </p>
-                <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                  Registrá tareas pendientes, asigná responsables y prioridad, definí fechas de vencimiento
-                  y marcá como completadas cuando se resuelvan.
                 </p>
               </div>
               <span className="mt-3 inline-flex items-center text-xs font-medium text-[#05397f] group-hover:underline">
@@ -101,18 +89,14 @@ export default function Home() {
 
             <a
               href="/clientes"
-              className="group flex flex-col justify-between rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-950/60 p-4 hover:border-[#05397f] hover:shadow-md transition-colors"
+              className="group flex flex-col justify-between rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white/90 dark:bg-zinc-950/60 p-4 hover:border-[#05397f] hover:shadow-lg hover:-translate-y-0.5 transition-all"
             >
               <div className="space-y-2">
                 <p className="text-xs font-medium uppercase tracking-wide text-[#05397f]">
                   Gestión de Clientes
                 </p>
                 <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-                  Bancos y contactos
-                </p>
-                <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                  Nombre del cliente (Banco), producto, fechas de contrato inicio–fin y persona de contacto.
-                  Espacio para ampliar datos después.
+                  Clientes
                 </p>
               </div>
               <span className="mt-3 inline-flex items-center text-xs font-medium text-[#05397f] group-hover:underline">
