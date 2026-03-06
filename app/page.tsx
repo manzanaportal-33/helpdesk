@@ -35,7 +35,7 @@ export default function Home() {
             </span>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
             <a
               href="/analisis"
               className="group flex flex-col justify-between rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white/90 dark:bg-zinc-950/60 p-4 hover:border-[#05397f] hover:shadow-lg hover:-translate-y-0.5 transition-all"
@@ -113,11 +113,28 @@ export default function Home() {
                   Matriz SLA
                 </p>
                 <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-                  SLA por cliente/producto
+                  SLA
                 </p>
               </div>
               <span className="mt-3 inline-flex items-center text-xs font-medium text-[#05397f] group-hover:underline">
                 Ir a Matriz SLA
+              </span>
+            </a>
+
+            <a
+              href="/informes"
+              className="group flex flex-col justify-between rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white/90 dark:bg-zinc-950/60 p-4 hover:border-[#05397f] hover:shadow-lg hover:-translate-y-0.5 transition-all"
+            >
+              <div className="space-y-2">
+                <p className="text-xs font-medium uppercase tracking-wide text-[#05397f]">
+                  Informes
+                </p>
+                <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                  Reportes y métricas
+                </p>
+              </div>
+              <span className="mt-3 inline-flex items-center text-xs font-medium text-[#05397f] group-hover:underline">
+                Ir a Informes
               </span>
             </a>
           </div>
