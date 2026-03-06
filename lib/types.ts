@@ -36,3 +36,18 @@ export interface Client {
   contactoTelefono: string;
   notas: string;
 }
+
+export interface SlaMatrixEntry {
+  id: number;
+  comercial: string;
+  cliente: string;
+  producto: string;
+  nivelEmergencia: string;
+  descripcion: string;
+  tiempoRespuestaMinMinutos: number | null;
+  tiempoRespuestaMaxMinutos: number | null;
+  tiempoRespuestaRaw: string;
+  diagnosticoMinHoras: number | null;
+  diagnosticoMaxHoras: number | null;
+  horarioSla: string;
+}
