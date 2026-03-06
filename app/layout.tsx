@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Helpdesk – Análisis de Tickets",
-  description: "Dashboard de análisis de tickets de Mesa de Ayuda.",
+  title: "Helpdesk – Gestión de Mesa de Ayuda",
+  description: "Panel centralizado para gestión y análisis de tickets de Mesa de Ayuda.",
 };
 
 export default function RootLayout({
